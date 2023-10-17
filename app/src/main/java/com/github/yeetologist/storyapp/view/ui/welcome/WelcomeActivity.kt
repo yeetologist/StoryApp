@@ -2,24 +2,48 @@ package com.github.yeetologist.storyapp.view.ui.welcome
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import com.github.yeetologist.storyapp.databinding.ActivityWelcomeBinding
+import com.github.yeetologist.storyapp.util.Preference
 import com.github.yeetologist.storyapp.view.ui.login.LoginActivity
+import com.github.yeetologist.storyapp.view.ui.main.MainActivity
 import com.github.yeetologist.storyapp.view.ui.register.RegisterActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
 
 class WelcomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityWelcomeBinding
 
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "tokenDataStore")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityWelcomeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        playAnimation()
-        setupAction()
+        val preferences = Preference.getInstance(dataStore)
+        CoroutineScope(Main).launch{
+            preferences.getToken().collect {
+                if (it == "") {
+                    binding = ActivityWelcomeBinding.inflate(layoutInflater)
+                    setContentView(binding.root)
+                    playAnimation()
+                    setupAction()
+                }
+                else {
+                    val intent = Intent(this@WelcomeActivity, MainActivity::class.java)
+                    intent.putExtra(MainActivity.EXTRA_TOKEN, it)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                }
+            }
+        }
     }
 
     private fun setupAction() {
@@ -31,7 +55,6 @@ class WelcomeActivity : AppCompatActivity() {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
     }
-
 
     private fun playAnimation() {
         ObjectAnimator.ofFloat(binding.imageView, View.TRANSLATION_X, -30f, 30f).apply {

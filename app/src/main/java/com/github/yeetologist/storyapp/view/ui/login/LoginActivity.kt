@@ -2,21 +2,26 @@ package com.github.yeetologist.storyapp.view.ui.login
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import com.github.yeetologist.storyapp.R
+import androidx.appcompat.app.AppCompatActivity
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import com.github.yeetologist.storyapp.data.Result
 import com.github.yeetologist.storyapp.data.remote.response.LoginResponse
 import com.github.yeetologist.storyapp.databinding.ActivityLoginBinding
+import com.github.yeetologist.storyapp.util.Preference
 import com.github.yeetologist.storyapp.view.ui.ViewModelFactory
 import com.github.yeetologist.storyapp.view.ui.main.MainActivity
-import com.github.yeetologist.storyapp.view.ui.register.RegisterViewModel
-import com.github.yeetologist.storyapp.view.ui.welcome.WelcomeActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
 
@@ -25,6 +30,8 @@ class LoginActivity : AppCompatActivity() {
     private val loginViewModel: LoginViewModel by viewModels{
         ViewModelFactory(applicationContext)
     }
+
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "tokenDataStore")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +45,11 @@ class LoginActivity : AppCompatActivity() {
         if (body.error) {
             Toast.makeText(this, body.message, Toast.LENGTH_LONG).show()
         } else {
+            val preferences = Preference.getInstance(dataStore)
+            CoroutineScope(Main).launch {
+                preferences.saveToken(body.loginResult.token)
+            }
+
             AlertDialog.Builder(this).apply {
                 setTitle("Yeah!")
                 setMessage("Anda berhasil login. Sudah tidak sabar untuk belajar ya?")

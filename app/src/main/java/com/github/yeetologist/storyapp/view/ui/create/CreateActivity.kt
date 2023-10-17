@@ -4,33 +4,27 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
-import androidx.lifecycle.lifecycleScope
 import com.github.yeetologist.storyapp.R
 import com.github.yeetologist.storyapp.data.Result
 import com.github.yeetologist.storyapp.data.remote.response.UploadResponse
-import com.github.yeetologist.storyapp.data.remote.retrofit.ApiConfig
 import com.github.yeetologist.storyapp.databinding.ActivityCreateBinding
 import com.github.yeetologist.storyapp.util.uriToFile
 import com.github.yeetologist.storyapp.view.ui.ViewModelFactory
 import com.github.yeetologist.storyapp.view.ui.create.CameraActivity.Companion.CAMERAX_RESULT
-import com.github.yeetologist.storyapp.view.ui.login.LoginViewModel
-import com.google.gson.Gson
-import kotlinx.coroutines.launch
+import com.github.yeetologist.storyapp.view.ui.main.MainActivity
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.HttpException
 
 class CreateActivity : AppCompatActivity() {
 
@@ -152,6 +146,13 @@ class CreateActivity : AppCompatActivity() {
 
     private fun processStory(body: UploadResponse) {
         showToast(body.message)
+
+        val token = intent.getStringExtra(EXTRA_TOKEN)
+        val intent = Intent(this@CreateActivity, MainActivity::class.java)
+        intent.putExtra(MainActivity.EXTRA_TOKEN, token)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
+        finish()
     }
 
     private fun showLoading(bool: Boolean) {

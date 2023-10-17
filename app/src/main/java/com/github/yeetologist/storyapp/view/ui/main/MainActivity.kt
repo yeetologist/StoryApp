@@ -1,12 +1,16 @@
 package com.github.yeetologist.storyapp.view.ui.main
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,9 +19,13 @@ import com.github.yeetologist.storyapp.data.Result
 import com.github.yeetologist.storyapp.data.remote.response.ListStoryItem
 import com.github.yeetologist.storyapp.data.remote.response.StoryResponse
 import com.github.yeetologist.storyapp.databinding.ActivityMainBinding
+import com.github.yeetologist.storyapp.util.Preference
 import com.github.yeetologist.storyapp.view.ui.ViewModelFactory
 import com.github.yeetologist.storyapp.view.ui.create.CreateActivity
 import com.github.yeetologist.storyapp.view.ui.detail.DetailActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,6 +35,8 @@ class MainActivity : AppCompatActivity() {
         ViewModelFactory(applicationContext)
     }
 
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "tokenDataStore")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -34,6 +44,17 @@ class MainActivity : AppCompatActivity() {
         setupRecyclerView()
         setupListUsers()
         setupMenu()
+        setupFab()
+    }
+
+    private fun setupFab() {
+        val preferences = Preference.getInstance(dataStore)
+        binding.fabLogout.setOnClickListener {
+            CoroutineScope(Main).launch {
+                preferences.saveToken("")
+            }
+            finish()
+        }
     }
 
     private fun setupMenu() {
@@ -85,7 +106,6 @@ class MainActivity : AppCompatActivity() {
         if (body.error) {
             Toast.makeText(this, "Gagal Sign Up", Toast.LENGTH_LONG).show()
         } else {
-            Toast.makeText(this, "Sign Up berhasil, silahkan login!", Toast.LENGTH_LONG).show()
             setListStories(body.listStory)
         }
     }
