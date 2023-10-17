@@ -66,7 +66,7 @@ class CreateActivity : AppCompatActivity() {
         with(binding) {
             btnGallery.setOnClickListener { startGallery() }
             btnCamera.setOnClickListener { startCameraX() }
-            btnUpload.setOnClickListener { uploadImage() }
+            buttonAdd.setOnClickListener { uploadImage() }
         }
     }
 
@@ -111,7 +111,7 @@ class CreateActivity : AppCompatActivity() {
         currentImageUri?.let { uri ->
             val imageFile = uriToFile(uri, this)
             Log.d("Image File", "showImage: ${imageFile.path}")
-            val description = binding.etCreateDescription.text.toString()
+            val description = binding.edAddDescription.text.toString()
             showLoading(true)
             val requestBody = description.toRequestBody("text/plain".toMediaType())
             val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())

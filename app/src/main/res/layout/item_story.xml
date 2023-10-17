@@ -7,7 +7,7 @@
     android:padding="8dp">
 
     <ImageView
-        android:id="@+id/iv_list"
+        android:id="@+id/iv_item_photo"
         android:layout_width="match_parent"
         android:layout_height="160dp"
         android:scaleType="fitXY"
@@ -19,7 +19,7 @@
 
 
     <TextView
-        android:id="@+id/tv_title"
+        android:id="@+id/tv_item_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -27,15 +27,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_list" />
+        app:layout_constraintTop_toBottomOf="@+id/iv_item_photo" />
 
     <TextView
-        android:id="@+id/tv_description"
+        android:id="@+id/tv_item_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_item_name" />
 </androidx.constraintlayout.widget.ConstraintLayout>

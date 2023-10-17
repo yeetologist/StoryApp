@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupFab() {
         val preferences = Preference.getInstance(dataStore)
-        binding.fabLogout.setOnClickListener {
+        binding.actionLogout.setOnClickListener {
             CoroutineScope(Main).launch {
                 preferences.saveToken("")
             }
@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun processStories(body : StoryResponse) {
         if (body.error) {
-            Toast.makeText(this, "Gagal Sign Up", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, body.message, Toast.LENGTH_LONG).show()
         } else {
             setListStories(body.listStory)
         }

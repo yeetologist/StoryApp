@@ -35,7 +35,7 @@
         app:layout_constraintTop_toBottomOf="@id/appBarContainer" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_logout"
+        android:id="@+id/action_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"

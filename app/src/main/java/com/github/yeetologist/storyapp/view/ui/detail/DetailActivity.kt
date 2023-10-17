@@ -28,10 +28,10 @@ class DetailActivity : AppCompatActivity() {
 
         with(binding){
             if (story != null) {
-                tvDetailTitle.text = story.name
+                tvDetailName.text = story.name
                 Glide.with(root)
                     .load(story.photoUrl)
-                    .into(ivDetail)
+                    .into(ivDetailPhoto)
                 tvDetailDescription.text = story.description
             }
         }

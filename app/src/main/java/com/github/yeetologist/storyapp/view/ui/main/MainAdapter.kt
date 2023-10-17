@@ -23,11 +23,11 @@ class MainAdapter : ListAdapter<ListStoryItem, MainAdapter.MyViewHolder>(DIFF_CA
     class MyViewHolder(private val binding: ItemStoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(listResult: ListStoryItem) {
-            binding.tvTitle.text = listResult.name
+            binding.tvItemName.text = listResult.name
             Glide.with(binding.root)
                 .load(listResult.photoUrl)
-                .into(binding.ivList)
-            binding.tvDescription.text = listResult.description
+                .into(binding.ivItemPhoto)
+            binding.tvItemDescription.text = listResult.description
         }
     }
 
