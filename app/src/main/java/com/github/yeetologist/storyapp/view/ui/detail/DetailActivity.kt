@@ -1,15 +1,11 @@
 package com.github.yeetologist.storyapp.view.ui.detail
 
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
-import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.github.yeetologist.storyapp.data.Result
 import com.github.yeetologist.storyapp.data.remote.response.ListStoryItem
 import com.github.yeetologist.storyapp.databinding.ActivityDetailBinding
-import com.github.yeetologist.storyapp.view.ui.ViewModelFactory
 
 class DetailActivity : AppCompatActivity() {
 

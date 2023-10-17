@@ -3,7 +3,6 @@ package com.github.yeetologist.storyapp.di
 import android.content.Context
 import com.github.yeetologist.storyapp.data.StoryRepository
 import com.github.yeetologist.storyapp.data.remote.retrofit.ApiConfig
-import kotlinx.coroutines.runBlocking
 
 object Injection {
     fun provideRepository(context: Context): StoryRepository {
