@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -156,8 +157,15 @@ class CreateActivity : AppCompatActivity() {
     }
 
     private fun showLoading(bool: Boolean) {
-//        binding.progressIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
+        if(bool) {
+            binding.vLayer.visibility = View.VISIBLE
+            binding.progressBar.visibility = View.VISIBLE
+        } else{
+            binding.vLayer.visibility = View.GONE
+            binding.progressBar.visibility = View.GONE
+        }
     }
+
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.provider.Settings
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -111,7 +112,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showLoading(bool: Boolean) {
-//        Toast.makeText(this, "Loading $bool", Toast.LENGTH_LONG).show()
+        if(bool) {
+            binding.vLayer.visibility = View.VISIBLE
+            binding.progressBar.visibility = View.VISIBLE
+        } else{
+            binding.vLayer.visibility = View.GONE
+            binding.progressBar.visibility = View.GONE
+        }
     }
 
     private fun setupRecyclerView() {

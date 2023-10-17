@@ -3,15 +3,15 @@ package com.github.yeetologist.storyapp.view.ui.register
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import com.github.yeetologist.storyapp.databinding.ActivityRegisterBinding
+import androidx.appcompat.app.AppCompatActivity
 import com.github.yeetologist.storyapp.data.Result
 import com.github.yeetologist.storyapp.data.remote.response.RegisterResponse
+import com.github.yeetologist.storyapp.databinding.ActivityRegisterBinding
 import com.github.yeetologist.storyapp.view.ui.ViewModelFactory
 import com.github.yeetologist.storyapp.view.ui.welcome.WelcomeActivity
 
@@ -53,7 +53,13 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun showLoading(bool: Boolean) {
-        Toast.makeText(this, "Loading $bool", Toast.LENGTH_LONG).show()
+        if(bool) {
+            binding.vLayer.visibility = View.VISIBLE
+            binding.progressBar.visibility = View.VISIBLE
+        } else{
+            binding.vLayer.visibility = View.GONE
+            binding.progressBar.visibility = View.GONE
+        }
     }
 
     private fun setupAction() {

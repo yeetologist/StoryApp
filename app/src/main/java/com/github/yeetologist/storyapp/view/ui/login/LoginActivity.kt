@@ -46,10 +46,6 @@ class LoginActivity : AppCompatActivity() {
             Toast.makeText(this, body.message, Toast.LENGTH_LONG).show()
         } else {
             val preferences = Preference.getInstance(dataStore)
-            CoroutineScope(Main).launch {
-                preferences.saveToken(body.loginResult.token)
-            }
-
             AlertDialog.Builder(this).apply {
                 setTitle("Yeah!")
                 setMessage("Anda berhasil login. Sudah tidak sabar untuk belajar ya?")
@@ -58,19 +54,25 @@ class LoginActivity : AppCompatActivity() {
                     intent.putExtra(MainActivity.EXTRA_TOKEN, body.loginResult.token)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                     startActivity(intent)
+                    CoroutineScope(Main).launch {
+                        preferences.saveToken(body.loginResult.token)
+                    }
                     finish()
                 }
                 create()
                 show()
             }
-//            Preference.saveToken(data.loginResult.token, requireContext())
-//            findNavController().navigate(R.id.action_loginFragment_to_mainActivity)
-//            requireActivity().finish()
         }
     }
 
     private fun showLoading(bool: Boolean) {
-//        Toast.makeText(this, "Loading $bool", Toast.LENGTH_LONG).show()
+        if(bool) {
+            binding.vLayer.visibility = View.VISIBLE
+            binding.progressBar.visibility = View.VISIBLE
+        } else{
+            binding.vLayer.visibility = View.GONE
+            binding.progressBar.visibility = View.GONE
+        }
     }
 
     private fun setupAction() {
@@ -78,8 +80,6 @@ class LoginActivity : AppCompatActivity() {
         binding.loginButton.setOnClickListener {
             val email = binding.etLoginEmail.text.toString()
             val password = binding.etLoginPassword.text.toString()
-
-//            viewModel.saveSession(UserModel(email, "sample_token"))
 
             loginViewModel.login(email, password).observe(this) {
                 if (it != null) {
