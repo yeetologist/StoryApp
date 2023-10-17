@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +18,7 @@ import com.github.yeetologist.storyapp.databinding.ActivityLoginBinding
 import com.github.yeetologist.storyapp.util.Preference
 import com.github.yeetologist.storyapp.view.ui.ViewModelFactory
 import com.github.yeetologist.storyapp.view.ui.main.MainActivity
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
@@ -43,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun processLogin(body: LoginResponse) {
         if (body.error) {
-            Toast.makeText(this, body.message, Toast.LENGTH_LONG).show()
+            showSnackbar(body.message)
         } else {
             val preferences = Preference.getInstance(dataStore)
             AlertDialog.Builder(this).apply {
@@ -63,6 +63,10 @@ class LoginActivity : AppCompatActivity() {
                 show()
             }
         }
+    }
+
+    private fun showSnackbar(message: String) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun showLoading(bool: Boolean) {
@@ -95,7 +99,7 @@ class LoginActivity : AppCompatActivity() {
 
                         is Result.Error -> {
                             showLoading(false)
-                            Toast.makeText(this, it.error, Toast.LENGTH_LONG).show()
+                            showSnackbar(it.error)
                         }
                     }
                 }

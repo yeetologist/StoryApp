@@ -6,7 +6,6 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.core.DataStore
@@ -24,6 +23,7 @@ import com.github.yeetologist.storyapp.util.Preference
 import com.github.yeetologist.storyapp.view.ui.ViewModelFactory
 import com.github.yeetologist.storyapp.view.ui.create.CreateActivity
 import com.github.yeetologist.storyapp.view.ui.detail.DetailActivity
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity() {
 
                         is Result.Error -> {
                             showLoading(false)
-                            Toast.makeText(this, it.error, Toast.LENGTH_LONG).show()
+                            showSnackbar(it.error)
                         }
                     }
                 }
@@ -105,10 +105,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun processStories(body : StoryResponse) {
         if (body.error) {
-            Toast.makeText(this, body.message, Toast.LENGTH_LONG).show()
+            showSnackbar(body.message)
         } else {
             setListStories(body.listStory)
         }
+    }
+
+    private fun showSnackbar(message: String) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun showLoading(bool: Boolean) {

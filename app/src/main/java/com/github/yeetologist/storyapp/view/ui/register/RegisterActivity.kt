@@ -5,7 +5,6 @@ import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +13,7 @@ import com.github.yeetologist.storyapp.data.remote.response.RegisterResponse
 import com.github.yeetologist.storyapp.databinding.ActivityRegisterBinding
 import com.github.yeetologist.storyapp.view.ui.ViewModelFactory
 import com.github.yeetologist.storyapp.view.ui.welcome.WelcomeActivity
+import com.google.android.material.snackbar.Snackbar
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -33,10 +33,10 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun processSignUp(body : RegisterResponse) {
         if (body.error) {
-            Toast.makeText(this, body.message, Toast.LENGTH_LONG).show()
+            showSnackbar(body.message)
         } else {
             val email = binding.etRegisterEmail.text.toString()
-            Toast.makeText(this, "Sign Up berhasil, silahkan login!", Toast.LENGTH_LONG).show()
+            showSnackbar("Sign Up berhasil, silahkan login!")
             AlertDialog.Builder(this).apply {
                 setTitle("Yeah!")
                 setMessage("Akun dengan $email sudah jadi nih. Yuk, login dan belajar coding.")
@@ -62,6 +62,10 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    private fun showSnackbar(message: String) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+    }
+
     private fun setupAction() {
         binding.registerButton.setOnClickListener {
 
@@ -83,7 +87,7 @@ class RegisterActivity : AppCompatActivity() {
 
                         is Result.Error -> {
                             showLoading(false)
-                            Toast.makeText(this, it.error, Toast.LENGTH_LONG).show()
+                            showSnackbar(it.error)
                         }
                     }
                 }

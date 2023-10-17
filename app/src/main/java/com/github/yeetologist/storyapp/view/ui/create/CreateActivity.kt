@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -22,6 +21,7 @@ import com.github.yeetologist.storyapp.util.uriToFile
 import com.github.yeetologist.storyapp.view.ui.ViewModelFactory
 import com.github.yeetologist.storyapp.view.ui.create.CameraActivity.Companion.CAMERAX_RESULT
 import com.github.yeetologist.storyapp.view.ui.main.MainActivity
+import com.google.android.material.snackbar.Snackbar
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -41,9 +41,9 @@ class CreateActivity : AppCompatActivity() {
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
-                Toast.makeText(this, "Permission request granted", Toast.LENGTH_LONG).show()
+                Snackbar.make(binding.root, "Permission request granted", Snackbar.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "Permission request denied", Toast.LENGTH_LONG).show()
+                Snackbar.make(binding.root, "Permission request denied", Snackbar.LENGTH_SHORT).show()
             }
         }
 
@@ -137,16 +137,16 @@ class CreateActivity : AppCompatActivity() {
 
                         is Result.Error -> {
                             showLoading(false)
-                            Toast.makeText(this, it.error, Toast.LENGTH_LONG).show()
+                            showSnackbar(it.error)
                         }
                     }
                 }
             }
-        } ?: showToast(getString(R.string.empty_image_warning))
+        } ?: showSnackbar(getString(R.string.empty_image_warning))
     }
 
     private fun processStory(body: UploadResponse) {
-        showToast(body.message)
+        showSnackbar(body.message)
 
         val token = intent.getStringExtra(EXTRA_TOKEN)
         val intent = Intent(this@CreateActivity, MainActivity::class.java)
@@ -166,8 +166,8 @@ class CreateActivity : AppCompatActivity() {
         }
     }
 
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    private fun showSnackbar(message: String) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 
     companion object {
