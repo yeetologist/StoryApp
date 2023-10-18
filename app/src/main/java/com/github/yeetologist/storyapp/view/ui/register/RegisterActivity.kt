@@ -8,6 +8,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.github.yeetologist.storyapp.R
 import com.github.yeetologist.storyapp.data.Result
 import com.github.yeetologist.storyapp.data.remote.response.RegisterResponse
 import com.github.yeetologist.storyapp.databinding.ActivityRegisterBinding
@@ -36,11 +37,11 @@ class RegisterActivity : AppCompatActivity() {
             showSnackbar(body.message)
         } else {
             val email = binding.etRegisterEmail.text.toString()
-            showSnackbar("Sign Up berhasil, silahkan login!")
+            showSnackbar(getString(R.string.register_successful))
             AlertDialog.Builder(this).apply {
-                setTitle("Yeah!")
-                setMessage("Akun dengan $email sudah jadi nih. Yuk, login dan belajar coding.")
-                setPositiveButton("Lanjut") { _, _ ->
+                setTitle(getString(R.string.yeah))
+                setMessage(getString(R.string.email_welcome, email))
+                setPositiveButton(getString(R.string.next)) { _, _ ->
                     val intent = Intent(this@RegisterActivity, WelcomeActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                     startActivity(intent)

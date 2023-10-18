@@ -18,7 +18,7 @@ class StoryRepository(private val apiService: ApiService) {
             val response = apiService.register(name, email, password)
             emit(Result.Success(response))
         } catch (e: Exception) {
-            Log.e("SignUpViewModel", "postSignUp: ${e.message.toString()}")
+            Log.e("RegisterViewModel", "postRegister: ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))
         }
     }

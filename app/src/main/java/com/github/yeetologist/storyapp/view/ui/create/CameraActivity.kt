@@ -8,7 +8,6 @@ import android.view.OrientationEventListener
 import android.view.Surface
 import android.view.WindowInsets
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -16,8 +15,10 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import com.github.yeetologist.storyapp.R
 import com.github.yeetologist.storyapp.databinding.ActivityCameraBinding
 import com.github.yeetologist.storyapp.util.createCustomTempFile
+import com.google.android.material.snackbar.Snackbar
 
 class CameraActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCameraBinding
@@ -68,11 +69,7 @@ class CameraActivity : AppCompatActivity() {
                 )
 
             } catch (exc: Exception) {
-                Toast.makeText(
-                    this@CameraActivity,
-                    "Gagal memunculkan kamera.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                showSnackbar(getString(R.string.camera_open_failure))
                 Log.e(TAG, "startCamera: ${exc.message}")
             }
         }, ContextCompat.getMainExecutor(this))
@@ -97,11 +94,7 @@ class CameraActivity : AppCompatActivity() {
                 }
 
                 override fun onError(exc: ImageCaptureException) {
-                    Toast.makeText(
-                        this@CameraActivity,
-                        "Gagal mengambil gambar.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showSnackbar(getString(R.string.camera_take_failure))
                     Log.e(TAG, "onError: ${exc.message}")
                 }
             }
@@ -138,6 +131,10 @@ class CameraActivity : AppCompatActivity() {
                 imageCapture?.targetRotation = rotation
             }
         }
+    }
+
+    private fun showSnackbar(message: String) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 
     override fun onStart() {

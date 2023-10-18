@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import com.github.yeetologist.storyapp.R
 import com.github.yeetologist.storyapp.data.Result
 import com.github.yeetologist.storyapp.data.remote.response.LoginResponse
 import com.github.yeetologist.storyapp.databinding.ActivityLoginBinding
@@ -47,9 +48,9 @@ class LoginActivity : AppCompatActivity() {
         } else {
             val preferences = Preference.getInstance(dataStore)
             AlertDialog.Builder(this).apply {
-                setTitle("Yeah!")
-                setMessage("Anda berhasil login. Sudah tidak sabar untuk belajar ya?")
-                setPositiveButton("Lanjut") { _, _ ->
+                setTitle(getString(R.string.yeah))
+                setMessage(getString(R.string.login_successful))
+                setPositiveButton(getString(R.string.next)) { _, _ ->
                     val intent = Intent(this@LoginActivity, MainActivity::class.java)
                     intent.putExtra(MainActivity.EXTRA_TOKEN, body.loginResult.token)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK

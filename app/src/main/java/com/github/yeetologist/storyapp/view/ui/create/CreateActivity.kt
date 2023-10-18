@@ -41,9 +41,9 @@ class CreateActivity : AppCompatActivity() {
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
-                Snackbar.make(binding.root, "Permission request granted", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, getString(R.string.permission_granted), Snackbar.LENGTH_SHORT).show()
             } else {
-                Snackbar.make(binding.root, "Permission request denied", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, getString(R.string.permission_denied), Snackbar.LENGTH_SHORT).show()
             }
         }
 
