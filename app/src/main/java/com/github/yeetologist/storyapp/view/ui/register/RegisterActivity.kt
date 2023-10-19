@@ -20,7 +20,7 @@ class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
 
-    private val registerViewModel: RegisterViewModel by viewModels{
+    private val registerViewModel: RegisterViewModel by viewModels {
         ViewModelFactory(applicationContext)
     }
 
@@ -32,7 +32,7 @@ class RegisterActivity : AppCompatActivity() {
         playAnimation()
     }
 
-    private fun processSignUp(body : RegisterResponse) {
+    private fun processSignUp(body: RegisterResponse) {
         if (body.error) {
             showSnackbar(body.message)
         } else {
@@ -54,13 +54,8 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun showLoading(bool: Boolean) {
-        if(bool) {
-            binding.vLayer.visibility = View.VISIBLE
-            binding.progressBar.visibility = View.VISIBLE
-        } else{
-            binding.vLayer.visibility = View.GONE
-            binding.progressBar.visibility = View.GONE
-        }
+        binding.vLayer.visibility = if (bool) View.VISIBLE else View.GONE
+        binding.progressBar.visibility = if (bool) View.VISIBLE else View.GONE
     }
 
     private fun showSnackbar(message: String) {

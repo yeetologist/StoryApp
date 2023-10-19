@@ -32,7 +32,7 @@ class CreateActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateBinding
     private var currentImageUri: Uri? = null
 
-    private val createViewModel: CreateViewModel by viewModels{
+    private val createViewModel: CreateViewModel by viewModels {
         ViewModelFactory(applicationContext)
     }
 
@@ -41,9 +41,17 @@ class CreateActivity : AppCompatActivity() {
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
-                Snackbar.make(binding.root, getString(R.string.permission_granted), Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(
+                    binding.root,
+                    getString(R.string.permission_granted),
+                    Snackbar.LENGTH_SHORT
+                ).show()
             } else {
-                Snackbar.make(binding.root, getString(R.string.permission_denied), Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(
+                    binding.root,
+                    getString(R.string.permission_denied),
+                    Snackbar.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -124,7 +132,7 @@ class CreateActivity : AppCompatActivity() {
             val token = intent.getStringExtra(EXTRA_TOKEN)
 
             if (token != null) {
-                createViewModel.postStory(multipartBody,requestBody, token).observe(this) {
+                createViewModel.postStory(multipartBody, requestBody, token).observe(this) {
                     when (it) {
                         is Result.Loading -> {
                             showLoading(true)
@@ -157,13 +165,8 @@ class CreateActivity : AppCompatActivity() {
     }
 
     private fun showLoading(bool: Boolean) {
-        if(bool) {
-            binding.vLayer.visibility = View.VISIBLE
-            binding.progressBar.visibility = View.VISIBLE
-        } else{
-            binding.vLayer.visibility = View.GONE
-            binding.progressBar.visibility = View.GONE
-        }
+        binding.vLayer.visibility = if (bool) View.VISIBLE else View.GONE
+        binding.progressBar.visibility = if (bool) View.VISIBLE else View.GONE
     }
 
     private fun showSnackbar(message: String) {

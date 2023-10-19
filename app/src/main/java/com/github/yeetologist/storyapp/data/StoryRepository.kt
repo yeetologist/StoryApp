@@ -12,7 +12,11 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 
 class StoryRepository(private val apiService: ApiService) {
-    fun postRegister(name: String, email: String, password: String): LiveData<Result<RegisterResponse>> = liveData {
+    fun postRegister(
+        name: String,
+        email: String,
+        password: String
+    ): LiveData<Result<RegisterResponse>> = liveData {
         emit(Result.Loading)
         try {
             val response = apiService.register(name, email, password)
@@ -45,7 +49,11 @@ class StoryRepository(private val apiService: ApiService) {
         }
     }
 
-    fun postStory(file: MultipartBody.Part, description: RequestBody, token: String): LiveData<Result<UploadResponse>> = liveData {
+    fun postStory(
+        file: MultipartBody.Part,
+        description: RequestBody,
+        token: String
+    ): LiveData<Result<UploadResponse>> = liveData {
         emit(Result.Loading)
         try {
             val response = apiService.postStory(file, description, "Bearer $token")

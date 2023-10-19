@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.github.yeetologist.storyapp.data.remote.response.ListStoryItem
 import com.github.yeetologist.storyapp.databinding.ItemStoryBinding
+import com.github.yeetologist.storyapp.util.loadImage
 
 class MainAdapter : ListAdapter<ListStoryItem, MainAdapter.MyViewHolder>(DIFF_CALLBACK) {
     private var onItemClickListener: OnItemClickListener? = null
@@ -24,9 +24,7 @@ class MainAdapter : ListAdapter<ListStoryItem, MainAdapter.MyViewHolder>(DIFF_CA
         RecyclerView.ViewHolder(binding.root) {
         fun bind(listResult: ListStoryItem) {
             binding.tvItemName.text = listResult.name
-            Glide.with(binding.root)
-                .load(listResult.photoUrl)
-                .into(binding.ivItemPhoto)
+            binding.ivItemPhoto.loadImage(listResult.photoUrl)
             binding.tvItemDescription.text = listResult.description
         }
     }

@@ -26,9 +26,9 @@ import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
 
-    private lateinit var binding:ActivityLoginBinding
+    private lateinit var binding: ActivityLoginBinding
 
-    private val loginViewModel: LoginViewModel by viewModels{
+    private val loginViewModel: LoginViewModel by viewModels {
         ViewModelFactory(applicationContext)
     }
 
@@ -71,13 +71,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun showLoading(bool: Boolean) {
-        if(bool) {
-            binding.vLayer.visibility = View.VISIBLE
-            binding.progressBar.visibility = View.VISIBLE
-        } else{
-            binding.vLayer.visibility = View.GONE
-            binding.progressBar.visibility = View.GONE
-        }
+        binding.vLayer.visibility = if (bool) View.VISIBLE else View.GONE
+        binding.progressBar.visibility = if (bool) View.VISIBLE else View.GONE
     }
 
     private fun setupAction() {
@@ -105,7 +100,6 @@ class LoginActivity : AppCompatActivity() {
                     }
                 }
             }
-
         }
     }
 

@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val mainViewModel: MainViewModel by viewModels{
+    private val mainViewModel: MainViewModel by viewModels {
         ViewModelFactory(applicationContext)
     }
 
@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.add_option_menu -> {
                     val token = intent.getStringExtra(EXTRA_TOKEN)
-                    val intent = Intent(this@MainActivity,CreateActivity::class.java)
+                    val intent = Intent(this@MainActivity, CreateActivity::class.java)
                     intent.putExtra(CreateActivity.EXTRA_TOKEN, token)
                     startActivity(intent)
 
@@ -74,6 +74,7 @@ class MainActivity : AppCompatActivity() {
                     startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
                     true
                 }
+
                 else -> super.onOptionsItemSelected(it)
             }
         }
@@ -103,7 +104,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun processStories(body : StoryResponse) {
+    private fun processStories(body: StoryResponse) {
         if (body.error) {
             showSnackbar(body.message)
         } else {
@@ -116,19 +117,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showLoading(bool: Boolean) {
-        if(bool) {
-            binding.vLayer.visibility = View.VISIBLE
-            binding.progressBar.visibility = View.VISIBLE
-        } else{
-            binding.vLayer.visibility = View.GONE
-            binding.progressBar.visibility = View.GONE
-        }
+        binding.vLayer.visibility = if (bool) View.VISIBLE else View.GONE
+        binding.progressBar.visibility = if (bool) View.VISIBLE else View.GONE
     }
 
     private fun setupRecyclerView() {
         val layoutManager =
             if (applicationContext.resources.configuration.orientation
-                == Configuration.ORIENTATION_LANDSCAPE) {
+                == Configuration.ORIENTATION_LANDSCAPE
+            ) {
                 GridLayoutManager(this, 2)
             } else {
                 LinearLayoutManager(this)

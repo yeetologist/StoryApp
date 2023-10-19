@@ -3,9 +3,9 @@ package com.github.yeetologist.storyapp.view.ui.detail
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
 import com.github.yeetologist.storyapp.data.remote.response.ListStoryItem
 import com.github.yeetologist.storyapp.databinding.ActivityDetailBinding
+import com.github.yeetologist.storyapp.util.loadImage
 
 class DetailActivity : AppCompatActivity() {
 
@@ -26,12 +26,10 @@ class DetailActivity : AppCompatActivity() {
             intent.getParcelableExtra(EXTRA_STORY)
         }
 
-        with(binding){
+        with(binding) {
             if (story != null) {
                 tvDetailName.text = story.name
-                Glide.with(root)
-                    .load(story.photoUrl)
-                    .into(ivDetailPhoto)
+                ivDetailPhoto.loadImage(story.photoUrl)
                 tvDetailDescription.text = story.description
             }
         }

@@ -28,15 +28,14 @@ class WelcomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val preferences = Preference.getInstance(dataStore)
-        CoroutineScope(Main).launch{
+        CoroutineScope(Main).launch {
             preferences.getToken().collect {
                 if (it == "") {
                     binding = ActivityWelcomeBinding.inflate(layoutInflater)
                     setContentView(binding.root)
                     playAnimation()
                     setupAction()
-                }
-                else {
+                } else {
                     val intent = Intent(this@WelcomeActivity, MainActivity::class.java)
                     intent.putExtra(MainActivity.EXTRA_TOKEN, it)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK

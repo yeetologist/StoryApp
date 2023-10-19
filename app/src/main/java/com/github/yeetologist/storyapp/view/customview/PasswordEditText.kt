@@ -9,15 +9,21 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
 import com.github.yeetologist.storyapp.R
 
-class PasswordEditText : AppCompatEditText, View.OnTouchListener{
+class PasswordEditText : AppCompatEditText, View.OnTouchListener {
 
     constructor(context: Context) : super(context) {
         init()
     }
+
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
         init()
     }
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         init()
     }
 
@@ -28,14 +34,18 @@ class PasswordEditText : AppCompatEditText, View.OnTouchListener{
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val password = s.toString()
                 when {
-                    password.isBlank() -> setError(context.getString(R.string.error_pw_empty),null)
-                    password.length < 8 -> setError(context.getString(R.string.error_pw_less_than_8),null)
+                    password.isBlank() -> setError(context.getString(R.string.error_pw_empty), null)
+                    password.length < 8 -> setError(
+                        context.getString(R.string.error_pw_less_than_8),
+                        null
+                    )
                 }
             }
 
             override fun afterTextChanged(p0: Editable?) {}
         })
     }
+
     override fun onTouch(v: View?, event: MotionEvent): Boolean {
         return false
     }

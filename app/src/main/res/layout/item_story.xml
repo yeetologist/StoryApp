@@ -10,9 +10,9 @@
         android:id="@+id/iv_item_photo"
         android:layout_width="match_parent"
         android:layout_height="160dp"
-        android:scaleType="fitXY"
         android:adjustViewBounds="true"
         android:contentDescription="@string/image_description"
+        android:scaleType="fitXY"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
