@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <group android:menuCategory="container">
         <item
-            android:id="@+id/add_option_menu"
-            android:icon="@drawable/ic_add"
+            android:id="@+id/action_logout"
+            android:icon="@drawable/ic_logout"
             android:title="@string/menu_settings"
             app:showAsAction="ifRoom" />
         <item

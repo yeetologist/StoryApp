@@ -49,24 +49,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupFab() {
-        val preferences = Preference.getInstance(dataStore)
-        binding.actionLogout.setOnClickListener {
-            CoroutineScope(Main).launch {
-                preferences.saveToken("")
-            }
-            finish()
+        binding.actionAdd.setOnClickListener {
+            val token = intent.getStringExtra(EXTRA_TOKEN)
+            val intent = Intent(this@MainActivity, CreateActivity::class.java)
+            intent.putExtra(CreateActivity.EXTRA_TOKEN, token)
+            startActivity(intent)
         }
     }
 
     private fun setupMenu() {
         binding.topAppBar.setOnMenuItemClickListener {
             when (it.itemId) {
-                R.id.add_option_menu -> {
-                    val token = intent.getStringExtra(EXTRA_TOKEN)
-                    val intent = Intent(this@MainActivity, CreateActivity::class.java)
-                    intent.putExtra(CreateActivity.EXTRA_TOKEN, token)
-                    startActivity(intent)
-
+                R.id.action_logout -> {
+                    val preferences = Preference.getInstance(dataStore)
+                    CoroutineScope(Main).launch {
+                        preferences.saveToken("")
+                    }
+                    finish()
                     true
                 }
 
