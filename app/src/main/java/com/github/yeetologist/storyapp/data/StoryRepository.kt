@@ -49,6 +49,17 @@ class StoryRepository(private val apiService: ApiService) {
         }
     }
 
+    fun getAllStoriesLocation(token: String): LiveData<Result<StoryResponse>> = liveData {
+        emit(Result.Loading)
+        try {
+            val response = apiService.getStoriesWithLocation("Bearer $token")
+            emit(Result.Success(response))
+        } catch (e: Exception) {
+            Log.e("MapsViewModel", "getAllStoriesLocation: ${e.message.toString()}")
+            emit(Result.Error(e.message.toString()))
+        }
+    }
+
     fun postStory(
         file: MultipartBody.Part,
         description: RequestBody,

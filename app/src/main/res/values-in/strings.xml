@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">StoryApp</string>
     <string name="menu_settings">Pengaturan</string>
+    <string name="menu_maps">Map</string>
     <string name="signup">Daftar</string>
     <string name="login">Masuk</string>
     <string name="message_welcome_page">Mau Berbagi Cerita Tentang Android, iOS, Machine Learning, Cloud, Front-End, Back-End, dan bidang IT lainnya? Di Dicoding aja!</string>
@@ -32,4 +33,5 @@
     <string name="next">Lanjut</string>
     <string name="register_successful">Register berhasil, silahkan login!</string>
     <string name="email_welcome">Akun dengan %1$s sudah jadi nih. Yuk, login dan belajar coding.</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>

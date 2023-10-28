@@ -7,6 +7,7 @@ import com.github.yeetologist.storyapp.di.Injection
 import com.github.yeetologist.storyapp.view.ui.create.CreateViewModel
 import com.github.yeetologist.storyapp.view.ui.login.LoginViewModel
 import com.github.yeetologist.storyapp.view.ui.main.MainViewModel
+import com.github.yeetologist.storyapp.view.ui.maps.MapsViewModel
 import com.github.yeetologist.storyapp.view.ui.register.RegisterViewModel
 
 class ViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
@@ -27,6 +28,10 @@ class ViewModelFactory(private val context: Context) : ViewModelProvider.Factory
 
             modelClass.isAssignableFrom(CreateViewModel::class.java) -> {
                 CreateViewModel(Injection.provideRepository(context)) as T
+            }
+
+            modelClass.isAssignableFrom(MapsViewModel::class.java) -> {
+                MapsViewModel(Injection.provideRepository(context)) as T
             }
 
             else -> throw IllegalArgumentException("Unknown ViewModel Class")

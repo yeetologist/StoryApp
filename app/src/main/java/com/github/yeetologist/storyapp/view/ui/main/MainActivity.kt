@@ -23,6 +23,7 @@ import com.github.yeetologist.storyapp.util.Preference
 import com.github.yeetologist.storyapp.view.ui.ViewModelFactory
 import com.github.yeetologist.storyapp.view.ui.create.CreateActivity
 import com.github.yeetologist.storyapp.view.ui.detail.DetailActivity
+import com.github.yeetologist.storyapp.view.ui.maps.MapsActivity
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
@@ -60,6 +61,15 @@ class MainActivity : AppCompatActivity() {
     private fun setupMenu() {
         binding.topAppBar.setOnMenuItemClickListener {
             when (it.itemId) {
+                R.id.map_option_menu -> {
+                    val mapIntent = Intent(this@MainActivity, MapsActivity::class.java)
+                    intent.getStringExtra(EXTRA_TOKEN)?.let { str ->
+                        mapIntent.putExtra(MapsActivity.EXTRA_TOKEN, str)
+                    }
+                    startActivity(mapIntent)
+                    true
+                }
+
                 R.id.action_logout -> {
                     val preferences = Preference.getInstance(dataStore)
                     CoroutineScope(Main).launch {
