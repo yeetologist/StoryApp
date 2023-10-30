@@ -71,11 +71,13 @@ class StoryRepository(private val apiService: ApiService) {
     fun postStory(
         file: MultipartBody.Part,
         description: RequestBody,
+        lat: Double?,
+        lon: Double?,
         token: String
     ): LiveData<Result<UploadResponse>> = liveData {
         emit(Result.Loading)
         try {
-            val response = apiService.postStory(file, description, "Bearer $token")
+            val response = apiService.postStory(file, description, lat, lon, "Bearer $token")
             emit(Result.Success(response))
         } catch (e: Exception) {
             Log.e("CreateStoryViewModel", "postStory: ${e.message.toString()}")

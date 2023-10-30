@@ -3,6 +3,7 @@ package com.github.yeetologist.storyapp.view.ui.create
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -21,6 +22,8 @@ import com.github.yeetologist.storyapp.util.uriToFile
 import com.github.yeetologist.storyapp.view.ui.ViewModelFactory
 import com.github.yeetologist.storyapp.view.ui.create.CameraActivity.Companion.CAMERAX_RESULT
 import com.github.yeetologist.storyapp.view.ui.main.MainActivity
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -31,6 +34,8 @@ class CreateActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCreateBinding
     private var currentImageUri: Uri? = null
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var currentLocation: Location? = null
 
     private val createViewModel: CreateViewModel by viewModels {
         ViewModelFactory(applicationContext)
@@ -41,35 +46,32 @@ class CreateActivity : AppCompatActivity() {
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
-                Snackbar.make(
-                    binding.root,
-                    getString(R.string.permission_granted),
-                    Snackbar.LENGTH_SHORT
-                ).show()
+                showSnackbar(getString(R.string.permission_granted))
             } else {
-                Snackbar.make(
-                    binding.root,
-                    getString(R.string.permission_denied),
-                    Snackbar.LENGTH_SHORT
-                ).show()
+                showSnackbar(getString(R.string.permission_denied))
             }
         }
 
-    private fun allPermissionsGranted() =
-        ContextCompat.checkSelfPermission(
+
+    private fun checkPermission(permission: String): Boolean {
+        return ContextCompat.checkSelfPermission(
             this,
-            REQUIRED_PERMISSION
+            permission
         ) == PackageManager.PERMISSION_GRANTED
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCreateBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        if (!allPermissionsGranted()) {
-            requestPermissionLauncher.launch(REQUIRED_PERMISSION)
+        if (!checkPermission(Manifest.permission.CAMERA)) {
+            requestPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
+
+        getMyLastLocation()
 
         with(binding) {
             btnGallery.setOnClickListener { startGallery() }
@@ -77,6 +79,25 @@ class CreateActivity : AppCompatActivity() {
             buttonAdd.setOnClickListener { uploadImage() }
         }
     }
+
+    private val requestPermissionMapLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            when {
+                permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false -> {
+                    getMyLastLocation()
+                }
+
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false -> {
+                    getMyLastLocation()
+                }
+
+                else -> {
+                    showSnackbar(getString(R.string.permission_denied))
+                }
+            }
+        }
 
     private fun startGallery() {
         launcherGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
@@ -130,27 +151,56 @@ class CreateActivity : AppCompatActivity() {
             )
 
             val token = intent.getStringExtra(EXTRA_TOKEN)
+            var lat = currentLocation?.latitude
+            var lon = currentLocation?.longitude
+
+            if (!binding.cbLocation.isChecked) {
+                lat = null
+                lon = null
+            }
 
             if (token != null) {
-                createViewModel.postStory(multipartBody, requestBody, token).observe(this) {
-                    when (it) {
-                        is Result.Loading -> {
-                            showLoading(true)
-                        }
+                createViewModel.postStory(multipartBody, requestBody, lat, lon, token)
+                    .observe(this) {
+                        when (it) {
+                            is Result.Loading -> {
+                                showLoading(true)
+                            }
 
-                        is Result.Success -> {
-                            showLoading(false)
-                            processStory(it.data)
-                        }
+                            is Result.Success -> {
+                                showLoading(false)
+                                processStory(it.data)
+                            }
 
-                        is Result.Error -> {
-                            showLoading(false)
-                            showSnackbar(it.error)
+                            is Result.Error -> {
+                                showLoading(false)
+                                showSnackbar(it.error)
+                            }
                         }
                     }
-                }
             }
         } ?: showSnackbar(getString(R.string.empty_image_warning))
+    }
+
+    private fun getMyLastLocation() {
+        if (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION) &&
+            checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+        ) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    currentLocation = location
+                } else {
+                    showSnackbar(getString(R.string.location_not_found))
+                }
+            }
+        } else {
+            requestPermissionMapLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        }
     }
 
     private fun processStory(body: UploadResponse) {
@@ -175,6 +225,5 @@ class CreateActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_TOKEN = "extra_token"
-        private const val REQUIRED_PERMISSION = Manifest.permission.CAMERA
     }
 }

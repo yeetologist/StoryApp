@@ -34,4 +34,6 @@
     <string name="email_welcome">An account with %1$s is ready. Let\'s log in and start coding.</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="retry">Try again</string>
+    <string name="post_location">Share Current Location</string>
+    <string name="location_not_found">Location is not found. Try Again</string>
 </resources>
