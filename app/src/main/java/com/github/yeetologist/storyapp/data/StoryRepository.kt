@@ -3,6 +3,11 @@ package com.github.yeetologist.storyapp.data
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
+import com.github.yeetologist.storyapp.data.remote.response.ListStoryItem
 import com.github.yeetologist.storyapp.data.remote.response.LoginResponse
 import com.github.yeetologist.storyapp.data.remote.response.RegisterResponse
 import com.github.yeetologist.storyapp.data.remote.response.StoryResponse
@@ -38,15 +43,18 @@ class StoryRepository(private val apiService: ApiService) {
         }
     }
 
-    fun getAllStories(token: String): LiveData<Result<StoryResponse>> = liveData {
-        emit(Result.Loading)
-        try {
-            val response = apiService.getListStories("Bearer $token")
-            emit(Result.Success(response))
-        } catch (e: Exception) {
-            Log.e("MainViewModel", "getALlStories: ${e.message.toString()}")
-            emit(Result.Error(e.message.toString()))
-        }
+
+    fun getAllStories(token: String): LiveData<PagingData<ListStoryItem>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 5,
+                enablePlaceholders = true,
+
+                ),
+            pagingSourceFactory = {
+                StoryPagingSource(apiService, token)
+            }
+        ).liveData
     }
 
     fun getAllStoriesLocation(token: String): LiveData<Result<StoryResponse>> = liveData {

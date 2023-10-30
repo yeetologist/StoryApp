@@ -1,6 +1,8 @@
 package com.github.yeetologist.storyapp.data.remote.response
 
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
@@ -17,6 +19,7 @@ data class StoryResponse(
 )
 
 @Parcelize
+@Entity(tableName = "story")
 data class ListStoryItem(
 
     @field:SerializedName("photoUrl")
@@ -34,6 +37,7 @@ data class ListStoryItem(
     @field:SerializedName("lon")
     val lon: Double? = null,
 
+    @PrimaryKey
     @field:SerializedName("id")
     val id: String,
 

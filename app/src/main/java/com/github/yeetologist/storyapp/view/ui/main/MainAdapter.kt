@@ -2,14 +2,14 @@ package com.github.yeetologist.storyapp.view.ui.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.github.yeetologist.storyapp.data.remote.response.ListStoryItem
 import com.github.yeetologist.storyapp.databinding.ItemStoryBinding
 import com.github.yeetologist.storyapp.util.loadImage
 
-class MainAdapter : ListAdapter<ListStoryItem, MainAdapter.MyViewHolder>(DIFF_CALLBACK) {
+class MainAdapter : PagingDataAdapter<ListStoryItem, MainAdapter.MyViewHolder>(DIFF_CALLBACK) {
     private var onItemClickListener: OnItemClickListener? = null
 
     interface OnItemClickListener {
@@ -36,9 +36,11 @@ class MainAdapter : ListAdapter<ListStoryItem, MainAdapter.MyViewHolder>(DIFF_CA
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val result = getItem(position)
-        holder.bind(result)
-        holder.itemView.setOnClickListener {
-            onItemClickListener?.onItemClick(result)
+        if (result != null) {
+            holder.bind(result)
+            holder.itemView.setOnClickListener {
+                onItemClickListener?.onItemClick(result)
+            }
         }
     }
 

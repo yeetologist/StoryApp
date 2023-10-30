@@ -5,26 +5,22 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.provider.Settings
-import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.github.yeetologist.storyapp.R
-import com.github.yeetologist.storyapp.data.Result
 import com.github.yeetologist.storyapp.data.remote.response.ListStoryItem
-import com.github.yeetologist.storyapp.data.remote.response.StoryResponse
 import com.github.yeetologist.storyapp.databinding.ActivityMainBinding
 import com.github.yeetologist.storyapp.util.Preference
 import com.github.yeetologist.storyapp.view.ui.ViewModelFactory
 import com.github.yeetologist.storyapp.view.ui.create.CreateActivity
 import com.github.yeetologist.storyapp.view.ui.detail.DetailActivity
 import com.github.yeetologist.storyapp.view.ui.maps.MapsActivity
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
@@ -43,8 +39,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setupRecyclerView()
         setupListUsers()
+        setupRecyclerView()
         setupMenu()
         setupFab()
     }
@@ -92,43 +88,27 @@ class MainActivity : AppCompatActivity() {
     private fun setupListUsers() {
         intent.getStringExtra(EXTRA_TOKEN)?.let { str ->
             mainViewModel.getStories(str).observe(this) {
-                if (it != null) {
-                    when (it) {
-                        is Result.Loading -> {
-                            showLoading(true)
+                val adapter = MainAdapter()
+                binding.rvListStories.adapter = adapter
+                    .withLoadStateFooter(
+                        footer = LoadingStateAdapter {
+                            adapter.retry()
                         }
-
-                        is Result.Success -> {
-                            showLoading(false)
-                            processStories(it.data)
-                        }
-
-                        is Result.Error -> {
-                            showLoading(false)
-                            showSnackbar(it.error)
-                        }
+                    )
+                adapter.stateRestorationPolicy =
+                    RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+                adapter.submitData(lifecycle, it)
+                adapter.setOnItemClickListener(object : MainAdapter.OnItemClickListener {
+                    override fun onItemClick(detailResult: ListStoryItem) {
+                        val intent = Intent(this@MainActivity, DetailActivity::class.java)
+                        intent.putExtra(DetailActivity.EXTRA_STORY, detailResult)
+                        startActivity(intent)
                     }
-                }
+                })
             }
         }
     }
 
-    private fun processStories(body: StoryResponse) {
-        if (body.error) {
-            showSnackbar(body.message)
-        } else {
-            setListStories(body.listStory)
-        }
-    }
-
-    private fun showSnackbar(message: String) {
-        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
-    }
-
-    private fun showLoading(bool: Boolean) {
-        binding.vLayer.visibility = if (bool) View.VISIBLE else View.GONE
-        binding.progressBar.visibility = if (bool) View.VISIBLE else View.GONE
-    }
 
     private fun setupRecyclerView() {
         val layoutManager =
@@ -140,21 +120,6 @@ class MainActivity : AppCompatActivity() {
                 LinearLayoutManager(this)
             }
         binding.rvListStories.layoutManager = layoutManager
-        val itemDecoration = DividerItemDecoration(this, layoutManager.orientation)
-        binding.rvListStories.addItemDecoration(itemDecoration)
-    }
-
-    private fun setListStories(items: List<ListStoryItem>?) {
-        val adapter = MainAdapter()
-        adapter.submitList(items)
-        binding.rvListStories.adapter = adapter
-        adapter.setOnItemClickListener(object : MainAdapter.OnItemClickListener {
-            override fun onItemClick(detailResult: ListStoryItem) {
-                val intent = Intent(this@MainActivity, DetailActivity::class.java)
-                intent.putExtra(DetailActivity.EXTRA_STORY, detailResult)
-                startActivity(intent)
-            }
-        })
     }
 
     companion object {

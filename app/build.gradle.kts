@@ -37,6 +37,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = "17"
+        freeCompilerArgs += listOf("-Xopt-in=kotlin.RequiresOptIn")
     }
     buildFeatures {
         viewBinding = true
@@ -74,8 +75,11 @@ dependencies {
 
     implementation("androidx.room:room-runtime:2.5.2")
     implementation("androidx.room:room-ktx:2.5.2")
+    implementation("androidx.room:room-paging:2.4.0-rc01")
     implementation("com.google.android.gms:play-services-maps:18.1.0")
     ksp("androidx.room:room-compiler:2.5.2")
+
+    implementation("androidx.paging:paging-runtime-ktx:3.2.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
