@@ -1,6 +1,8 @@
 package com.github.yeetologist.storyapp.view.ui.maps
 
+import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.github.yeetologist.storyapp.R
@@ -13,6 +15,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 
@@ -44,6 +47,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.uiSettings.isCompassEnabled = true
         mMap.uiSettings.isMapToolbarEnabled = true
 
+        setMapStyle()
         setupListUsers()
     }
 
@@ -53,16 +57,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 if (it != null) {
                     when (it) {
                         is Result.Loading -> {
-                            showLoading(true)
                         }
 
                         is Result.Success -> {
-                            showLoading(false)
                             processStories(it.data)
                         }
 
                         is Result.Error -> {
-                            showLoading(false)
                             showSnackbar(it.error)
                         }
                     }
@@ -95,16 +96,24 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    private fun setMapStyle() {
+        try {
+            val success =
+                mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style))
+            if (!success) {
+                Log.e(TAG, "Style parsing failed.")
+            }
+        } catch (exception: Resources.NotFoundException) {
+            Log.e(TAG, "Can't find style. Error: ", exception)
+        }
+    }
+
     private fun showSnackbar(message: String) {
         Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 
-    private fun showLoading(bool: Boolean) {
-//        binding.vLayer.visibility = if (bool) View.VISIBLE else View.GONE
-//        binding.progressBar.visibility = if (bool) View.VISIBLE else View.GONE
-    }
-
     companion object {
+        private const val TAG = "MapsActivity"
         const val EXTRA_TOKEN = "extra_token"
     }
 
